@@ -170,7 +170,7 @@ def top_categories(
     return result
 
 
-def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> Dict[str, Any]:
+def compute_quality_flags(df: pd.DataFrame, summary: DatasetSummary, missing_df: pd.DataFrame) -> Dict[str, Any]:
     """
     Простейшие эвристики «качества» данных:
     - слишком много пропусков;
@@ -185,6 +185,64 @@ def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> 
     flags["max_missing_share"] = max_missing_share
     flags["too_many_missing"] = max_missing_share > 0.5
 
+    "Новые эвристики:"
+
+    "1. Дубликаты id, при наличии столобцов с id "
+    
+    id_col = [col for col in df.columns if 'id' in col.lower()]
+    id_duplicates = {}
+    total_id_duplicate_share = 0.0
+    
+    for col in id_col:
+        duplicates_count = df[col].duplicated().sum()
+        if duplicates_count > 0:
+            duplicate_share = float(duplicates_count / len(df))
+            total_id_duplicate_share += duplicate_share
+            id_duplicates[col] = {
+            'duplicates_count': int(duplicates_count),
+            'duplicates_share': float(duplicates_count / len(df))
+        }
+
+    flags["has_suspicious_id_duplicates"] = len(id_duplicates) > 0
+    flags["id_duplicates"] = id_duplicates
+    flags["total_id_duplicate_share"] = total_id_duplicate_share
+
+    "2. Проверка категориальных признаков на высокую кардинальность"
+    
+    categorical_cols = df.select_dtypes(include=['object', 'category']).columns
+
+    categorical_cols = [col for col in categorical_cols if col not in id_duplicates]
+    total_high_cardinality_penalty = 0.0
+
+    high_cardinality_cols = {}
+    for col in categorical_cols:
+        unique_count = df[col].nunique()
+        unique_share = float(unique_count / len(df))
+        if unique_count > 100:
+            high_cardinality_cols[col] = {
+                'unique_count': int(unique_count),
+                'unique_share': float(unique_count / len(df))
+            }
+            penalty = min(0.3, unique_share * 0.5)
+            total_high_cardinality_penalty += penalty
+
+    flags["has_high_cardinality_categoricals"] = len(high_cardinality_cols) > 0
+    flags["high_cardinality"] = high_cardinality_cols
+    flags["high_cardinality_penalty"] = min(0.5, total_high_cardinality_penalty)
+
+    "3. Флаг, показывающий, есть ли колонки, где все значения одинаковые"
+    constant_cols = [col for col in df.columns if df[col].nunique() == 1]
+    constant_penalty = len(constant_cols) * 0.05  # 5% штрафа за каждый константный столбец
+    constant_penalty = min(0.2, constant_penalty)  # максимум 20% штрафа
+
+    flags["has_constant_columns"] = len(constant_cols) > 0
+    flags["constant_columns"] = constant_cols
+    flags["constant_columns_count"] = len(constant_cols)
+    flags["constant_penalty"] = constant_penalty
+
+    
+
+
     # Простейший «скор» качества
     score = 1.0
     score -= max_missing_share  # чем больше пропусков, тем хуже
@@ -192,6 +250,25 @@ def compute_quality_flags(summary: DatasetSummary, missing_df: pd.DataFrame) -> 
         score -= 0.2
     if summary.n_cols > 100:
         score -= 0.1
+    
+    # Штраф за слишком много признаков
+    if summary.n_cols > 100:
+        score -= 0.1
+    
+    # Штраф за дубликаты в ID (критично для целостности данных)
+    if flags["has_suspicious_id_duplicates"]:
+        # Чем больше доля дубликатов, тем больше штраф
+        id_penalty = min(0.3, total_id_duplicate_share * 1.5)
+        score -= id_penalty
+        flags["id_penalty"] = id_penalty
+    
+    # Штраф за высокую кардинальность
+    if flags["has_high_cardinality_categoricals"]:
+        score -= flags["high_cardinality_penalty"]
+    
+    # Штраф за константные столбцы
+    if flags["has_constant_columns"]:
+        score -= flags["constant_penalty"]
 
     score = max(0.0, min(1.0, score))
     flags["quality_score"] = score
