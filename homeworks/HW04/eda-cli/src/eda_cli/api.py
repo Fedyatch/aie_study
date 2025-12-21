@@ -77,6 +77,9 @@ class QualityResponse(BaseModel):
         description="Размеры датасета: {'n_rows': ..., 'n_cols': ...}, если известны",
     )
 
+class QualityFlagsResponse(BaseModel):
+    flags: dict[str, bool]
+
 
 # ---------- Системный эндпоинт ----------
 
@@ -198,7 +201,7 @@ async def quality_from_csv(file: UploadFile = File(...)) -> QualityResponse:
     # Используем EDA-ядро из S03
     summary = summarize_dataset(df)
     missing_df = missing_table(df)
-    flags_all = compute_quality_flags(summary, missing_df)
+    flags_all = compute_quality_flags(df, summary, missing_df)
 
     # Ожидаем, что compute_quality_flags вернёт quality_score в [0,1]
     score = float(flags_all.get("quality_score", 0.0))
@@ -242,3 +245,37 @@ async def quality_from_csv(file: UploadFile = File(...)) -> QualityResponse:
         flags=flags_bool,
         dataset_shape={"n_rows": n_rows, "n_cols": n_cols},
     )
+
+@app.post(
+    "/quality-flags-from-csv",
+    response_model = QualityFlagsResponse,
+    tags=["quality"],
+    summary="Возвращает только булевы флаги качества на основе CSV-файла"
+)
+async def quality_flags_from_csv(file: UploadFile = File(...)) -> QualityFlagsResponse:
+    """
+    Принимает CSV-файл, вычисляет флаги качества.
+    """
+    if file.content_type not in ("text/csv", "application/vnd.ms-excel", "application/octet-stream"):
+        raise HTTPException(status_code=400, detail="Ожидается CSV-файл (content-type text/csv).")
+    try:
+        df = pd.read_csv(file.file)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=400, detail=f"Не удалось прочитать CSV: {exc}")
+    if df.empty:
+        raise HTTPException(status_code=400, detail="CSV-файл не содержит данных (пустой DataFrame).")
+
+    #Вызываем ядро
+    summary = summarize_dataset(df)
+    missing_df = missing_table(df)
+    flags_all = compute_quality_flags(df, summary, missing_df)
+    
+    flags_bool = {
+        key: bool(value)
+        for key, value in flags_all.items()
+        if isinstance(value, bool)
+    }
+
+    return QualityFlagsResponse(flags=flags_bool)
+ 
+
