@@ -289,6 +289,8 @@ curl -X POST "http://1172.16.17.32:8000/quality-flags-from-csv" \
   - `has_high_cardinality_categoricals` – есть категориальные признаки с высокой кардинальностью;
   - `has_constant_columns` – есть колонки с одинаковыми значениями.
 
+---
+
 ## Структура проекта (упрощённо)
 
 ```text
