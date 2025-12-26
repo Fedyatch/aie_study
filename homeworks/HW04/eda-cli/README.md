@@ -247,6 +247,48 @@ curl -X POST "http://127.0.0.1:8000/quality-from-csv" \
 
 ---
 
+### 5. `POST /quality-flags-from-csv` – получение флагов качества по CSV-файлу
+
+Эндпоинт принимает CSV-файл, внутри:
+
+- читает его в `pandas.DataFrame`;
+- вызывает функции из `eda_cli.core`:
+  - `summarize_dataset`,
+  - `missing_table`,
+  - `compute_quality_flags`;
+- возвращает только булевы флаги качества, включая новые эвристики из HW03 (например, `has_constant_columns`, `has_high_cardinality_categoricals`, `has_suspicious_id_duplicates`).
+
+**Запрос:**
+
+```http
+POST /quality-flags-from-csv
+Content-Type: multipart/form-data
+file: <CSV-файл>
+```
+
+Через Swagger:
+
+- в `/docs` открыть POST `/quality-flags-from-csv`,
+- нажать `Try it out`,
+- выбрать файл (например, `data/example.csv`),
+- нажать `Execute`.
+
+**Пример вызова через `curl` (Linux/macOS/WSL):**
+
+```bash
+curl -X POST "http://1172.16.17.32:8000/quality-flags-from-csv" \
+  -F "file=@data/example.csv"
+```
+
+Ответ будет содержать:
+
+- `flags` – словарь булевых флагов, отражающих наличие или отсутствие конкретных проблем с качеством данных, например:
+  - `too_few_rows` – слишком мало строк;
+  - `too_many_missing` – слишком много пропусков;
+  - `has_suspicious_id_duplicates` – есть дубликаты в ID-столбцах;
+  - `has_high_cardinality_categoricals` – есть категориальные признаки с высокой кардинальностью;
+  - `has_constant_columns` – есть колонки с одинаковыми значениями.
+
 ## Структура проекта (упрощённо)
 
 ```text
