@@ -1,0 +1,25 @@
+{
+    "ds1": {
+        "method": "DBSCAN",
+        "params": {
+            "eps": 0.5,
+            "min_samples": 120
+        },
+        "criterion": "max_silhouette"
+    },
+    "ds2": {
+        "method": "KMeans",
+        "params": {
+            "n_clusters": 2
+        },
+        "criterion": "max_silhouette"
+    },
+    "ds3": {
+        "method": "DBSCAN",
+        "params": {
+            "eps": 0.4,
+            "min_samples": 150
+        },
+        "criterion": "max_silhouette"
+    }
+}
