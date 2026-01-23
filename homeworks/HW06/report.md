@@ -28,7 +28,7 @@ ROC-AUC — устойчивая метрика для бинарной клас
 
 - DummyClassifier  (strategy='most_frequent') — наивный baseline, всегда предсказывает самый частый класс.
 - LogisticRegression — линейный baseline из S05, использовался в pipeline с StandardScaler.
-- DecisionTreeClassifier — подбирались max_depth ([3, 5, 7, 10]) и min_samples_leaf ([5, 10, 20]) для контроля переобучения.
+- DecisionTreeClassifier — подбирались max_depth ([3, 5, 7, 10]) и min_samples_leaf ([5, 10, 20]), ccp_alpha ([0.0, 0.001, 0.01]) для контроля переобучения.
 - RandomForestClassifier — подбирались max_depth ([5, 8, 12]), min_samples_leaf ([5, 10]) и max_features (['sqrt', 'log2']).
 - GradientBoostingClassifier — подбирались max_depth ([3, 5]), learning_rate ([0.05, 0.1]) и subsample ([0.8, 1.0])
 
