@@ -55,3 +55,9 @@ logs/
 *.tmp
 *.bak
 *.old
+
+# Данные
+data/
+*.npz
+*.h5
+*.hdf5
