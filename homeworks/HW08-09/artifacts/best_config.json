@@ -1,0 +1,25 @@
+{
+  "dataset": "EMNIST_balanced",
+  "seed": 42,
+  "model": {
+    "type": "MLP",
+    "input_size": 784,
+    "hidden_sizes": [
+      128,
+      64
+    ],
+    "num_classes": 47,
+    "activation": "ReLU",
+    "dropout": 0.3,
+    "use_bn": false
+  },
+  "optimizer": {
+    "name": "Adam",
+    "lr": 0.001
+  },
+  "early_stopping": {
+    "patience": 5,
+    "best_epoch": 12,
+    "best_val_accuracy": 0.8418402777777778
+  }
+}
