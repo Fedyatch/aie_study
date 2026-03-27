@@ -1,0 +1,39 @@
+{
+  "dataset": "STL10",
+  "seed": 42,
+  "model": {
+    "type": "ResNet18",
+    "pretrained": true,
+    "num_classes": 10,
+    "trainable_layers": [
+      "layer4",
+      "fc"
+    ],
+    "total_params": 8398858
+  },
+  "transforms": {
+    "resize": 256,
+    "crop": 224,
+    "normalize_mean": [
+      0.44671058654785156,
+      0.4398098289966583,
+      0.4066465198993683
+    ],
+    "normalize_std": [
+      0.22415795922279358,
+      0.22150105237960815,
+      0.22391186654567719
+    ]
+  },
+  "training": {
+    "optimizer": "Adam",
+    "lr_backbone": 0.0001,
+    "lr_head": 0.001,
+    "weight_decay": 0.0001,
+    "batch_size": 128,
+    "epochs_trained": 12,
+    "best_epoch": 4,
+    "best_val_accuracy": 0.9662,
+    "best_val_loss": 0.1418
+  }
+}
