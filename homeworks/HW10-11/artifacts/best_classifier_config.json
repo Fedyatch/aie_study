@@ -9,31 +9,33 @@
       "layer4",
       "fc"
     ],
-    "total_params": 8398858
-  },
-  "transforms": {
-    "resize": 256,
-    "crop": 224,
-    "normalize_mean": [
-      0.44671058654785156,
-      0.4398098289966583,
-      0.4066465198993683
+    "frozen_layers": [
+      "conv1",
+      "bn1",
+      "layer1",
+      "layer2",
+      "layer3"
     ],
-    "normalize_std": [
-      0.22415795922279358,
-      0.22150105237960815,
-      0.22391186654567719
-    ]
+    "total_trainable_params": 8398858
   },
   "training": {
     "optimizer": "Adam",
+    "lr": 0.001,
     "lr_backbone": 0.0001,
-    "lr_head": 0.001,
     "weight_decay": 0.0001,
     "batch_size": 128,
     "epochs_trained": 12,
-    "best_epoch": 4,
-    "best_val_accuracy": 0.9662,
-    "best_val_loss": 0.1418
-  }
+    "best_epoch": 10,
+    "best_val_accuracy": 0.9642376005649567,
+    "best_val_loss": 0.1422584354877472,
+    "criterion": "CrossEntropyLoss"
+  },
+  "data": {
+    "train_size": 4500,
+    "val_size": 500,
+    "test_size": 8000,
+    "split_ratio": "0.8/0.1/0.1",
+    "transform": "Resize(256) \u2192 CenterCrop(224) \u2192 Normalize(ImageNet)"
+  },
+  "device": "cuda"
 }

@@ -2,6 +2,6 @@ experiment_id,task,dataset,seed,model_summary,optimizer,lr,epochs_trained,best_v
 C1,classification,STL10,42,SimpleCNN (32-64-128-256),Adam,0.001,12,0.6143588423728943,,,,,без аугментаций
 C2,classification,STL10,42,SimpleCNN (32-64-128-256),Adam,0.001,12,0.6237203627824783,,,,,с аугментациями
 C3,classification,STL10,42,ResNet18 (head-only),Adam,0.001,12,0.9523168057203293,,,,,заморожен backbone
-C4,classification,STL10,42,ResNet18 (finetune layer4+fc),Adam,1e-4/1e-3,12,0.9642376005649567,0.6649305555555556,,,,частичный fine-tune
+C4,classification,STL10,42,ResNet18 (finetune layer4+fc),Adam,0.001,12,0.9642376005649567,0.6649305555555556,,,,частичный fine-tune
 V1,segmentation,OxfordIIITPet,42,DeepLabV3_ResNet50 (pretrained),N/A,N/A,0,,,,,0.33431890342638065,базовая бинаризация (кошка/собака)
 V2,segmentation,OxfordIIITPet,42,DeepLabV3_ResNet50 (pretrained),N/A,N/A,0,,,,,0.33431508585193365,бинаризация + удаление мелких компонент
