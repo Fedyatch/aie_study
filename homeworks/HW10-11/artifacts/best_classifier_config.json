@@ -19,23 +19,53 @@
     "total_trainable_params": 8398858
   },
   "training": {
-    "optimizer": "Adam",
-    "lr": 0.001,
-    "lr_backbone": 0.0001,
-    "weight_decay": 0.0001,
+    "optimizer": {
+      "type": "Adam",
+      "lr_head": 0.001,
+      "lr_backbone": 0.0001,
+      "weight_decay": 0.0001,
+      "betas": [
+        0.9,
+        0.999
+      ],
+      "eps": 1e-08
+    },
+    "criterion": {
+      "type": "CrossEntropyLoss",
+      "reduction": "mean"
+    },
+    "scheduler": "None",
     "batch_size": 128,
     "epochs_trained": 12,
     "best_epoch": 10,
     "best_val_accuracy": 0.9642376005649567,
-    "best_val_loss": 0.1422584354877472,
-    "criterion": "CrossEntropyLoss"
+    "best_val_loss": 0.1422584354877472
   },
   "data": {
     "train_size": 4500,
     "val_size": 500,
     "test_size": 8000,
     "split_ratio": "0.8/0.1/0.1",
-    "transform": "Resize(256) \u2192 CenterCrop(224) \u2192 Normalize(ImageNet)"
+    "transforms": {
+      "resize": 256,
+      "center_crop": 224,
+      "normalize": {
+        "mean": [
+          0.485,
+          0.456,
+          0.406
+        ],
+        "std": [
+          0.229,
+          0.224,
+          0.225
+        ]
+      }
+    },
+    "augmentations": {
+      "C1_C2": "RandomHorizontalFlip(p=0.5), RandomCrop(96,padding=8), ColorJitter, RandomRotation(10)",
+      "C3_C4": "None (\u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d \u0441\u0442\u0430\u043d\u0434\u0430\u0440\u0442\u043d\u044b\u0439 transform ResNet)"
+    }
   },
   "device": "cuda"
 }
