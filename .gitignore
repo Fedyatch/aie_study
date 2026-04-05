@@ -29,6 +29,7 @@ __pycache__/
 build/
 dist/
 eggs/
+results/
 *.egg-info/
 .installed.cfg
 
