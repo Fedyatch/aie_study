@@ -1,0 +1,5 @@
+﻿query,before_retrieved_sources,after_retrieved_sources,changed
+Как защитить капитал от падения рынка?,"fin_07, fin_12, fin_10","fin_07, fin_12, fin_10",False
+Что такое стоп-лосс?,"fin_02, fin_10, fin_14","fin_17, fin_02, fin_10",True
+Как оценить риск облигаций при изменении ставок?,"fin_05, fin_12, fin_15","fin_05, fin_12, fin_15",False
+Что такое диверсификация?,"fin_01, fin_01, fin_15","fin_01, fin_01, fin_15",False
