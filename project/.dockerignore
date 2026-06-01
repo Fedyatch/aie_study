@@ -1,0 +1,27 @@
+# Виртуальное окружение uv (очень тяжелое)
+.venv
+
+# Папка с данными (если не нужна для сервиса, но у нас модель в artifacts)
+data/
+
+# Ноутбуки (они не нужны для работы сервиса)
+notebooks/
+
+# Кэш и временные файлы
+__pycache__
+*.pyc
+*.pyo
+.ipynb_checkpoints
+
+# Файлы Git
+.git
+.gitignore
+
+# Уже существующий Dockerfile (не нужен внутри контейнера)
+Dockerfile
+.dockerignore
+
+# Артефакты с экспериментами (если есть лишние CSV/картинки)
+artifacts/*.csv
+artifacts/*.png
+artifacts/figures/

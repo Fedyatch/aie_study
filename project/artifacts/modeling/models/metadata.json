@@ -1,0 +1,23 @@
+{
+  "model_name": "HistGradientBoosting",
+  "roc_auc": 0.8695,
+  "features": [
+    "RevolvingUtilizationOfUnsecuredLines",
+    "age",
+    "NumberOfTime30-59DaysPastDueNotWorse",
+    "DebtRatio",
+    "MonthlyIncome",
+    "NumberOfOpenCreditLinesAndLoans",
+    "NumberOfTimes90DaysLate",
+    "NumberRealEstateLoansOrLines",
+    "NumberOfTime60-89DaysPastDueNotWorse",
+    "NumberOfDependents"
+  ],
+  "preprocessing": [
+    "median_imputation",
+    "log1p",
+    "TotalPastDue_aggregation",
+    "RobustScaler"
+  ],
+  "date": "2026-06-01 19:16:54"
+}

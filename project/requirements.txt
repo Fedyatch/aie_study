@@ -1,0 +1,14 @@
+# API и сервер
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+pydantic==2.9.1
+
+# ML и данные
+scikit-learn==1.8.0
+pandas==2.2.2
+numpy==1.26.4
+joblib==1.4.2
+
+# Логирование и метрики (опционально, но как в твоём стиле)
+loguru==0.7.2
+prometheus-client==0.20.0
